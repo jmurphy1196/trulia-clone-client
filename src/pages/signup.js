@@ -3,14 +3,16 @@ import styled from "styled-components";
 
 //redux
 import { connect } from "react-redux";
-import { loginUser } from "../redux/actions/userActions";
+import { signupUser } from "../redux/actions/userActions";
 
-export class login extends Component {
+export class signup extends Component {
   componentDidMount() {
     let emailField = document.getElementById("email");
     let emailLabel = document.getElementById("email-label");
     let passwordField = document.getElementById("password");
     let passwordLabel = document.getElementById("password-label");
+    let confirmPasswordField = document.getElementById("confirmPassword");
+    let confirmPasswordLabel = document.getElementById("confirmPassword-label");
 
     emailField.addEventListener("focus", () => {
       emailLabel.style.transform = "translateY(-1.8rem)";
@@ -28,6 +30,14 @@ export class login extends Component {
         passwordLabel.style.transform = "translateY(0)";
       }
     });
+    confirmPasswordField.addEventListener("focus", () => {
+      confirmPasswordLabel.style.transform = "translateY(-1.8rem)";
+    });
+    confirmPasswordField.addEventListener("focusout", () => {
+      if (confirmPasswordField.value.length === 0) {
+        confirmPasswordLabel.style.transform = "translateY(0)";
+      }
+    });
   }
   handleChange = (event) => {
     let name = event.target.name;
@@ -41,20 +51,20 @@ export class login extends Component {
       () => console.log(this.state)
     );
   };
-  handleLogin = () => {
+  handleSignup = () => {
     const userData = {
       ...this.state,
     };
-    this.props.loginUser(userData);
+    this.props.signupUser(userData, this.props.history);
   };
   render() {
     return (
-      <LoginWrapper>
+      <SignupWrapper>
         <div className="header">
           <h1>Trulia</h1>
-          <span>Log in</span>
+          <span>Sign up</span>
         </div>
-        <div className="login-form">
+        <div className="signup-form">
           <label id="email-label" for="email">
             Email
           </label>
@@ -73,16 +83,25 @@ export class login extends Component {
             name="password"
             type="password"
           />
+          <label id="confirmPassword-label" for="confirmPassword">
+            Confirm password
+          </label>
+          <input
+            onChange={this.handleChange}
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+          />
         </div>
-        <button onClick={this.handleLogin} id="login-btn">
-          Log in
+        <button onClick={this.handleSignup} id="signup-btn">
+          Sign Up
         </button>
-      </LoginWrapper>
+      </SignupWrapper>
     );
   }
 }
 
-const LoginWrapper = styled.div`
+const SignupWrapper = styled.div`
   display: flex;
   width: 100vw;
   height: 100vh;
@@ -113,9 +132,9 @@ const LoginWrapper = styled.div`
       font-size: 2rem;
     }
   }
-  .login-form {
+  .signup-form {
     position: relative;
-    top: 12rem;
+    top: 9rem;
     display: flex;
     flex-direction: column;
     input {
@@ -135,9 +154,9 @@ const LoginWrapper = styled.div`
       transition: 0.3s ease;
     }
   }
-  #login-btn {
+  #signup-btn {
     position: relative;
-    top: 15rem;
+    top: 11rem;
     width: 10rem;
     font-size: 1.4rem;
     font-family: "Noto Sans";
@@ -155,4 +174,4 @@ const mapStateToProps = (state) => ({
   errors: state.UI.errors,
 });
 
-export default connect(mapStateToProps, { loginUser })(login);
+export default connect(mapStateToProps, { signupUser })(signup);
